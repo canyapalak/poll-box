@@ -30,13 +30,16 @@ function PollsBoard({ allPolls }) {
   }
 
   return (
-    <div className="bg-sky-100 p-5 flex flex-col gap-3 border-solid border-2 border-ra rounded-lg border-stone-700">
+    <div
+      className="bg-gradient-to-b from-amber-100 to-amber-200 p-5 flex flex-col gap-3 
+    border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
+    >
       {allPolls?.map((poll) => (
         <div
           key={poll.id}
-          className="bg-amber-100 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
+          className="bg-white flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
         >
-          <div className="w-[3rem] h-[3rem] p-2 bg-stone-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
+          <div className="w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
             {" "}
             <CategoryIcon category={poll.category} className="" />
           </div>
