@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, runTransaction, get } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -55,12 +55,40 @@ function PollDetails() {
     setSelectedChoice(index);
   }
 
-  const choiceBgColors = ["bg-stone-500", "bg-slate-500"];
+  const choiceBgColors = ["bg-zinc-400", "bg-neutral-300"];
 
   const totalVotes = singlePoll?.choices.reduce(
     (total, choice) => total + choice.vote,
     0
   );
+
+  async function handleChoiceAndVote(index) {
+    handleChoiceClick(index);
+    const pollRef = doc(db, "polls", id);
+    const selectedChoiceRef = pollRef
+      .collection("choices")
+      .doc(singlePoll.choices[index].name);
+    try {
+      await db.runTransaction(async (transaction) => {
+        const pollDoc = await transaction.get(pollRef);
+        const choiceDoc = await transaction.get(selectedChoiceRef);
+        if (!pollDoc.exists() || !choiceDoc.exists()) {
+          throw "Document does not exist!";
+        }
+        const pollData = pollDoc.data();
+        const choiceData = choiceDoc.data();
+        const updatedChoice = { ...choiceData, vote: choiceData.vote + 1 };
+        transaction.update(selectedChoiceRef, updatedChoice);
+        const updatedPoll = {
+          ...pollData,
+          totalVotes: pollData.totalVotes + 1,
+        };
+        transaction.update(pollRef, updatedPoll);
+      });
+    } catch (error) {
+      console.log("Error updating document: ", error);
+    }
+  }
 
   useEffect(() => {
     async function getPollById() {
@@ -120,7 +148,7 @@ function PollDetails() {
                 {singlePoll?.choices.map((choice, index) => (
                   <div
                     key={index}
-                    onClick={() => handleChoiceClick(index)}
+                    onClick={() => handleChoiceAndVote(index)}
                     className="flex flex-row"
                   >
                     <div
@@ -165,8 +193,8 @@ function PollDetails() {
                               <div className="flex flex-row justify-evenly gap-4">
                                 <p>{percentage}%</p>
                                 <p>
-                                  {choice.vote}
-                                  {choice.vote <= 1 ? " vote" : " votes"}
+                                  ({choice.vote}{" "}
+                                  {choice.vote === 1 ? "vote" : "votes"})
                                 </p>
                               </div>
                             </div>
