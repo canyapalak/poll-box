@@ -42,6 +42,10 @@ function PollsBoard({ allPolls }) {
       ? allPolls
       : allPolls?.filter((poll) => poll.category === selectedCategory);
 
+  function getTotalVotes(poll) {
+    return poll.choices.reduce((total, choice) => total + choice.vote, 0);
+  }
+
   return (
     <div>
       <select
@@ -73,7 +77,7 @@ function PollsBoard({ allPolls }) {
             <Link to={poll.id} key={poll.id}>
               <div
                 key={poll.id}
-                className="hover:bg-amber-200 bg-amber-100 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
+                className="hover:bg-orange-300 bg-amber-100 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
               >
                 <div className="w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
                   {" "}
@@ -81,7 +85,11 @@ function PollsBoard({ allPolls }) {
                 </div>
                 <div className="flex flex-row my-auto gap-5 justify-between w-full">
                   <h3>{poll.title}</h3>
-                  <p className="mr-3">{poll.totalVotes} votes</p>
+                  <p className="mr-3">
+                    {" "}
+                    {getTotalVotes(poll)}{" "}
+                    {getTotalVotes(poll) === 1 ? "vote" : "votes"}
+                  </p>
                 </div>
               </div>
             </Link>

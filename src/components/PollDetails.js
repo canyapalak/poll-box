@@ -55,18 +55,12 @@ function PollDetails() {
     setSelectedChoice(index);
   }
 
-  const choiceBgColors = [
-    "bg-sky-200",
-    "bg-green-200",
-    "bg-yellow-200",
-    "bg-red-200",
-    "bg-lime-200",
-    "bg-indigo-200",
-    "bg-teal-200",
-    "bg-pink-200",
-    "bg-emerald-200",
-    "bg-fuchsia-200",
-  ];
+  const choiceBgColors = ["bg-stone-500", "bg-slate-500"];
+
+  const totalVotes = singlePoll?.choices.reduce(
+    (total, choice) => total + choice.vote,
+    0
+  );
 
   useEffect(() => {
     async function getPollById() {
@@ -90,11 +84,12 @@ function PollDetails() {
   }, [id]);
 
   console.log("singlePoll", singlePoll);
+  console.log("selectedChoice", selectedChoice);
 
   return (
-    <div>
+    <div className="mb-5">
       {isLoading ? (
-        <img src={Spinner} className="w-7 mx-auto mt-40" />
+        <img src={Spinner} alt="Spinner" className="w-7 mx-auto mt-40" />
       ) : (
         <div>
           <Link to={"/"}>
@@ -119,7 +114,7 @@ function PollDetails() {
                 </p>
               </div>
             </div>
-            <div className="bg-gradient-to-b from-amber-100 to-amber-50 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
+            <div className=" bg-amber-100 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
               <p className="text-center mx-auto mt-1">{singlePoll?.title}</p>
               <div className="flex flex-col gap-y-3">
                 {singlePoll?.choices.map((choice, index) => (
@@ -129,9 +124,10 @@ function PollDetails() {
                     className="flex flex-row"
                   >
                     <div
-                      className={`flex flex-row justify-between w-full cursor-pointer hover:bg-amber-300 bg-stone-100 py-1 px-5 border-solid 
+                      className={`flex flex-row justify-between w-full cursor-pointer
+                       hover:bg-orange-300 bg-stone-100 py-1 px-5 border-solid 
                       border-2 rounded-lg border-stone-700 ${
-                        selectedChoice === index && "bg-amber-300"
+                        selectedChoice === index && "bg-orange-300"
                       }`}
                     >
                       <p>{choice.name}</p>
@@ -143,7 +139,8 @@ function PollDetails() {
                 ))}
                 {!isMore && (
                   <div
-                    className="p-2 bg-red-300 hover:bg-red-200 cursor-pointer mx-auto rounded-lg border-2 border-stone-700 shadow-md my-3"
+                    className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer mx-auto rounded-lg border-2
+                     border-stone-700 shadow-md my-3"
                     onClick={handleShowMore}
                   >
                     Show Results
@@ -152,27 +149,46 @@ function PollDetails() {
                 )}
 
                 {isMore && (
-                  <div className="flex flex-col gap-2">
-                    <p className="text-center mt-3 mb-5">
-                      {singlePoll?.totalVotes} votes
+                  <div className="flex flex-col gap-2 mt-5">
+                    {singlePoll?.choices
+                      .slice()
+                      .sort((a, b) => b.vote - a.vote)
+                      .map((choice, i) => {
+                        const percentage =
+                          totalVotes > 0
+                            ? Math.round((choice.vote / totalVotes) * 100)
+                            : 0;
+                        return (
+                          <div key={i} className="flex flex-col">
+                            <div className="flex flex-row justify-between ">
+                              <p>{choice.name}</p>
+                              <div className="flex flex-row justify-evenly gap-4">
+                                <p>{percentage}%</p>
+                                <p>
+                                  {choice.vote}
+                                  {choice.vote <= 1 ? " vote" : " votes"}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="h-5 w-full border-2 rounded-lg border-gray-500 bg-slate-50">
+                              <div
+                                key={i}
+                                className={`${
+                                  choiceBgColors[i % choiceBgColors.length]
+                                } h-full rounded-md border-solid border-2 border-slate-50`}
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    <p className="pl-1 mt-2 mb-5">
+                      {totalVotes} votes in total
                     </p>
-                    {singlePoll?.choices.map((choice, i) => (
-                      <div key={i} className="flex flex-row">
-                        <div
-                          key={i}
-                          className={`flex flex-row justify-between ${
-                            choiceBgColors[i % choiceBgColors.length]
-                          } px-5 border-solid border-2 rounded-r-2xl rounded-l-lg border-stone-700`}
-                        >
-                          <p>{choice.name}</p>
-                        </div>
-                        <p className="ml-2 mt-0.5">{choice.vote} votes</p>
-                      </div>
-                    ))}
 
                     <div
-                      className="p-2 bg-red-300 hover:bg-red-200 cursor-pointer 
-                      mx-auto rounded-lg border-2 border-stone-700 shadow-md mt-5"
+                      className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer 
+                      mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3"
                       onClick={handleShowMore}
                     >
                       Hide Results
