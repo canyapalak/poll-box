@@ -12,18 +12,18 @@ import LogoOt from "../assets/icon-other.png";
 import { useState } from "react";
 
 function PollsBoard({ allPolls }) {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const categories = [
-    { category: "politics", icon: LogoPo },
-    { category: "sports", icon: LogoSp },
-    { category: "health", icon: LogoHe },
-    { category: "art", icon: LogoAr },
-    { category: "tech", icon: LogoTe },
-    { category: "products", icon: LogoPr },
-    { category: "life", icon: LogoLi },
-    { category: "other", icon: LogoOt },
-    { category: "business", icon: LogoBu },
+    { category: "Politics", icon: LogoPo },
+    { category: "Sports", icon: LogoSp },
+    { category: "Health/Wellness", icon: LogoHe },
+    { category: "Art/Culture", icon: LogoAr },
+    { category: "Tech/Science", icon: LogoTe },
+    { category: "Brands/Products", icon: LogoPr },
+    { category: "Life", icon: LogoLi },
+    { category: "Miscellaneous", icon: LogoOt },
+    { category: "Business/Finance", icon: LogoBu },
   ];
 
   function CategoryIcon({ category }) {
@@ -38,7 +38,7 @@ function PollsBoard({ allPolls }) {
   }
 
   const filteredPolls =
-    selectedCategory === "all"
+    selectedCategory === "All"
       ? allPolls
       : allPolls?.filter((poll) => poll.category === selectedCategory);
 
@@ -49,18 +49,18 @@ function PollsBoard({ allPolls }) {
         id="categories"
         value={selectedCategory}
         onChange={handleCategoryChange}
-        className="h-[35px] w-[190px] rounded-md border-2 border-stone-700 mb-3 pl-1 shadow-md"
+        className="h-[35px] w-[190px] rounded-md border-2 border-stone-700 mb-3 pl-1 shadow-md gap-3"
       >
-        <option value="all">All</option>
-        <option value="art">Art/Culture</option>
-        <option value="business">Business/Finance</option>
-        <option value="health">Health/Wellness</option>
-        <option value="life">Life</option>
-        <option value="politics">Politics</option>
-        <option value="products">Brands/Products</option>
-        <option value="sports">Sports</option>
-        <option value="tech">Tech/Science</option>
-        <option value="other">Miscellaneous</option>
+        <option value="All">All</option>
+        <option value="Art/Culture">Art/Culture</option>
+        <option value="Business/Finance">Business/Finance</option>
+        <option value="Health/Wellness">Health/Wellness</option>
+        <option value="Life">Life</option>
+        <option value="Politics">Politics</option>
+        <option value="Brands/Products">Brands/Products</option>
+        <option value="Sports">Sports</option>
+        <option value="Tech/Science">Tech/Science</option>
+        <option value="Miscellaneous">Miscellaneous</option>
       </select>
       <div
         className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 
@@ -80,7 +80,7 @@ function PollsBoard({ allPolls }) {
                   <CategoryIcon category={poll.category} className="" />
                 </div>
                 <div className="flex flex-row my-auto gap-5 justify-between w-full">
-                  <h3 className="">{poll.title}</h3>
+                  <h3>{poll.title}</h3>
                   <p className="mr-3">{poll.totalVotes} votes</p>
                 </div>
               </div>
