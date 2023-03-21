@@ -13,9 +13,8 @@ import LogoTe from "../assets/icon-tech.png";
 import LogoPr from "../assets/icon-products.png";
 import LogoOt from "../assets/icon-other.png";
 import Spinner from "../assets/spinner.gif";
-import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaCheck } from "react-icons/fa";
-import { BiChevronDown, BiChevronUp } from "react-icons/bi";
+import { BiChevronDown, BiChevronUp, BiChevronsLeft } from "react-icons/bi";
 
 function PollDetails() {
   const { id } = useParams();
@@ -56,6 +55,19 @@ function PollDetails() {
     setSelectedChoice(index);
   }
 
+  const choiceBgColors = [
+    "bg-sky-200",
+    "bg-green-200",
+    "bg-yellow-200",
+    "bg-red-200",
+    "bg-lime-200",
+    "bg-indigo-200",
+    "bg-teal-200",
+    "bg-pink-200",
+    "bg-emerald-200",
+    "bg-fuchsia-200",
+  ];
+
   useEffect(() => {
     async function getPollById() {
       const docRef = doc(db, "polls", id);
@@ -86,7 +98,7 @@ function PollDetails() {
       ) : (
         <div>
           <Link to={"/"}>
-            <IoMdArrowRoundBack className="text-2xl mb-3" />
+            <BiChevronsLeft className="text-2xl mb-3" />
           </Link>
           <div
             className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 
@@ -107,7 +119,7 @@ function PollDetails() {
                 </p>
               </div>
             </div>
-            <div className="bg-amber-100 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
+            <div className="bg-gradient-to-b from-amber-100 to-amber-50 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
               <p className="text-center mx-auto mt-1">{singlePoll?.title}</p>
               <div className="flex flex-col gap-y-3">
                 {singlePoll?.choices.map((choice, index) => (
@@ -140,13 +152,27 @@ function PollDetails() {
                 )}
 
                 {isMore && (
-                  <div className="flex flex-col ">
-                    <p className="text-center mt-3">
+                  <div className="flex flex-col gap-2">
+                    <p className="text-center mt-3 mb-5">
                       {singlePoll?.totalVotes} votes
                     </p>
+                    {singlePoll?.choices.map((choice, i) => (
+                      <div key={i} className="flex flex-row">
+                        <div
+                          key={i}
+                          className={`flex flex-row justify-between ${
+                            choiceBgColors[i % choiceBgColors.length]
+                          } px-5 border-solid border-2 rounded-r-2xl rounded-l-lg border-stone-700`}
+                        >
+                          <p>{choice.name}</p>
+                        </div>
+                        <p className="ml-2 mt-0.5">{choice.vote} votes</p>
+                      </div>
+                    ))}
 
                     <div
-                      className="p-2 bg-red-300 hover:bg-red-200 cursor-pointer mx-auto rounded-lg border-2 border-stone-700 shadow-md mt-3"
+                      className="p-2 bg-red-300 hover:bg-red-200 cursor-pointer 
+                      mx-auto rounded-lg border-2 border-stone-700 shadow-md mt-5"
                       onClick={handleShowMore}
                     >
                       Hide Results
