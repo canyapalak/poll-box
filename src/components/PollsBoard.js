@@ -10,6 +10,7 @@ import LogoTe from "../assets/icon-tech.png";
 import LogoPr from "../assets/icon-products.png";
 import LogoOt from "../assets/icon-other.png";
 import { useState } from "react";
+import { HiOutlinePlusCircle } from "react-icons/hi";
 
 function PollsBoard({ allPolls }) {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -48,24 +49,33 @@ function PollsBoard({ allPolls }) {
 
   return (
     <div>
-      <select
-        name="categories"
-        id="categories"
-        value={selectedCategory}
-        onChange={handleCategoryChange}
-        className="h-[35px] w-[190px] rounded-md border-2 border-stone-700 mb-3 pl-1 shadow-md gap-3"
-      >
-        <option value="All">All</option>
-        <option value="Art/Culture">Art/Culture</option>
-        <option value="Business/Finance">Business/Finance</option>
-        <option value="Health/Wellness">Health/Wellness</option>
-        <option value="Life">Life</option>
-        <option value="Politics">Politics</option>
-        <option value="Brands/Products">Brands/Products</option>
-        <option value="Sports">Sports</option>
-        <option value="Tech/Science">Tech/Science</option>
-        <option value="Miscellaneous">Miscellaneous</option>
-      </select>
+      <div className="flex flex-row justify-between mb-3">
+        <select
+          name="categories"
+          id="categories"
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          className="h-[35px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md "
+        >
+          <option value="All">All</option>
+          <option value="Art/Culture">Art/Culture</option>
+          <option value="Business/Finance">Business/Finance</option>
+          <option value="Health/Wellness">Health/Wellness</option>
+          <option value="Life">Life</option>
+          <option value="Politics">Politics</option>
+          <option value="Brands/Products">Brands/Products</option>
+          <option value="Sports">Sports</option>
+          <option value="Tech/Science">Tech/Science</option>
+          <option value="Miscellaneous">Miscellaneous</option>
+        </select>
+        <div
+          className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer rounded-lg border-2
+                       border-stone-700 shadow-md px-2"
+        >
+          <HiOutlinePlusCircle className="inline-block text-xl mb-0.5 mr-1" />
+          New Poll
+        </div>
+      </div>
       <div
         className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 
         border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"

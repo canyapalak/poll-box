@@ -15,7 +15,6 @@ export const PollsContextProvider = (props) => {
         const polls = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           title: doc.data().title,
-          totalVotes: doc.data().totalVotes,
           choices: doc.data().choices,
           category: doc.data().category,
           postTime: new Date(

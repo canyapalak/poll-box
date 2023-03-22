@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { doc, getDoc, runTransaction, get } from "firebase/firestore";
+import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -65,30 +65,17 @@ function PollDetails() {
   async function handleChoiceAndVote(index) {
     handleChoiceClick(index);
     const pollRef = doc(db, "polls", id);
-    const selectedChoiceRef = pollRef
-      .collection("choices")
-      .doc(singlePoll.choices[index].name);
     try {
-      await db.runTransaction(async (transaction) => {
-        const pollDoc = await transaction.get(pollRef);
-        const choiceDoc = await transaction.get(selectedChoiceRef);
-        if (!pollDoc.exists() || !choiceDoc.exists()) {
-          throw "Document does not exist!";
-        }
-        const pollData = pollDoc.data();
-        const choiceData = choiceDoc.data();
-        const updatedChoice = { ...choiceData, vote: choiceData.vote + 1 };
-        transaction.update(selectedChoiceRef, updatedChoice);
-        const updatedPoll = {
-          ...pollData,
-          totalVotes: pollData.totalVotes + 1,
-        };
-        transaction.update(pollRef, updatedPoll);
-      });
+      // await updateDoc(pollRef, {
+      //   [`choices.${[selectedChoice]}vote`]: increment(1),
+      // });
+      console.log("Document updated");
     } catch (error) {
       console.log("Error updating document: ", error);
     }
   }
+
+  console.log("singlePoll.choices.name :>> ", singlePoll?.choices[1].name);
 
   useEffect(() => {
     async function getPollById() {
