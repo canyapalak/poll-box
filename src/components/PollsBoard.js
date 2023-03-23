@@ -68,13 +68,15 @@ function PollsBoard({ allPolls }) {
           <option value="Tech/Science">Tech/Science</option>
           <option value="Miscellaneous">Miscellaneous</option>
         </select>
-        <div
-          className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer rounded-lg border-2
-                       border-stone-700 shadow-md px-2"
-        >
-          <HiOutlinePlusCircle className="inline-block text-xl mb-0.5 mr-1" />
-          New Poll
-        </div>
+        <Link to={"/newpoll"}>
+          <div
+            className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer rounded-lg border-2
+                         border-stone-700 shadow-md px-2"
+          >
+            <HiOutlinePlusCircle className="inline-block text-xl mb-0.5 mr-1" />
+            New Poll
+          </div>
+        </Link>
       </div>
       <div
         className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 

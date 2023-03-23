@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "./views/HomePage.js";
 import { PollsContext } from "./store/PollsContext.js";
 import PollPage from "./views/PollPage";
+import CreatePoll from "./views/CreatePoll";
 
 function App() {
   const { allPolls } = useContext(PollsContext);
@@ -16,6 +17,7 @@ function App() {
         element={<HomePage allPolls={allPolls} isLoading={isLoading} />}
       />
       <Route path="/:id" element={<PollPage />} />
+      <Route path="/newpoll" element={<CreatePoll />} />
     </Routes>
   );
 }

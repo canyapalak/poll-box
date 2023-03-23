@@ -1,5 +1,11 @@
 import { useParams } from "react-router-dom";
-import { doc, getDoc, increment, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -62,13 +68,29 @@ function PollDetails() {
     0
   );
 
+  // async function handleChoiceAndVote(index) {
+  //   handleChoiceClick(index);
+  //   const pollRef = doc(db, "polls", id);
+  //   try {
+  //     await updateDoc(pollRef, {
+  //       [`choices.${[selectedChoice]}vote`]: increment(1),
+  //     });
+  //     console.log("Document updated");
+  //   } catch (error) {
+  //     console.log("Error updating document: ", error);
+  //   }
+  // }
   async function handleChoiceAndVote(index) {
     handleChoiceClick(index);
-    const pollRef = doc(db, "polls", id);
+    const pollRef = doc(db, "polls-2", id);
     try {
-      // await updateDoc(pollRef, {
-      //   [`choices.${[selectedChoice]}vote`]: increment(1),
-      // });
+      await updateDoc(pollRef, {
+        [`choices.${selectedChoice}`]: arrayUnion("vote"),
+      });
+      await updateDoc(pollRef, {
+        [`choices.${selectedChoice}`]: arrayRemove("vote"),
+      });
+
       console.log("Document updated");
     } catch (error) {
       console.log("Error updating document: ", error);
