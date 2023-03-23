@@ -77,8 +77,31 @@ function PollDetails() {
     console.log("index :>> ", index);
     handleChoiceClick(index);
     const pollRef = doc(db, "polls", id);
+    const docRefToUpdate = doc(db, "polls", `choices`);
+    console.log("docRefToUpdate :>> ", docRefToUpdate);
+    const documentToUpdate = await getDoc(docRefToUpdate);
+    console.log("documentToUpdate", documentToUpdate);
+
+    const document = await getDoc(pollRef);
+
+    console.log("document :>> ", document.data().choices[index]);
+    const oldObject = document.data().choices[index];
+    const newDocObject = document.data().choices[index];
+    newDocObject.vote = newDocObject.vote + 1;
+    console.log("afer voting :>> ", newDocObject);
+
+    console.log("newDocObject", newDocObject);
+
+    const votesToUpdate = document.data().choices[index].vote;
+    console.log("votesToUpdate", votesToUpdate);
     try {
       console.log("handleChoiceClick(index)", handleChoiceClick(index));
+      // await updateDoc(pollRef, {
+      //   choices: arrayRemove(oldObject),
+      // });
+      await updateDoc(pollRef, {
+        choices: arrayUnion(newDocObject),
+      });
       // await updateDoc(pollRef, {
       //   [`choices.${index}.vote`]: arrayUnion(+1),
       // });
@@ -92,7 +115,7 @@ function PollDetails() {
     }
   }
 
-  console.log("singlePoll.choices.name :>> ", singlePoll?.choices[1].name);
+  // console.log("singlePoll.choices.name :>> ", singlePoll?.choices[1].name);
 
   useEffect(() => {
     async function getPollById() {

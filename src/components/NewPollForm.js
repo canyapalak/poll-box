@@ -157,12 +157,9 @@ function NewPollForm() {
               >
                 Open Modal
               </button>
-              <Modal open={isOpen}>Fancy Modal</Modal>
-            </div>
-
-            <div className="relative z-20 bg-red-400 p-[10px]">
-              {" "}
-              Extra Content to be shown in Modal
+              <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                Fancy Modal
+              </Modal>
             </div>
           </React.Fragment>
           {/* Modal  */}
