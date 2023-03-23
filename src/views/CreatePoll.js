@@ -7,7 +7,7 @@ function HomePage({ allPolls, isLoading }) {
     <div className="min-h-screen mx-8 2xl:mx-80 xl:mx-60 lg:mx-40 md:mx-30 sm:mx-20 flex-row justify-center">
       <NavBar />
       {isLoading ? (
-        <img src={Spinner} className="w-7 mx-auto mt-40" />
+        <img src={Spinner} alt="Loading" className="w-7 mx-auto mt-40" />
       ) : (
         <NewPollForm />
       )}

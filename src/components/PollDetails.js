@@ -61,35 +61,30 @@ function PollDetails() {
     setSelectedChoice(index);
   }
 
-  const choiceBgColors = ["bg-zinc-400", "bg-neutral-300"];
+  const choiceBgColors = [
+    "bg-gradient-to-r from-rose-600 to-neutral-300",
+    "bg-gradient-to-r from-lime-600 to-neutral-300",
+    "bg-gradient-to-r from-amber-600 to-neutral-300",
+    "bg-gradient-to-r from-sky-600 to-neutral-300",
+  ];
 
   const totalVotes = singlePoll?.choices.reduce(
     (total, choice) => total + choice.vote,
     0
   );
 
-  // async function handleChoiceAndVote(index) {
-  //   handleChoiceClick(index);
-  //   const pollRef = doc(db, "polls", id);
-  //   try {
-  //     await updateDoc(pollRef, {
-  //       [`choices.${[selectedChoice]}vote`]: increment(1),
-  //     });
-  //     console.log("Document updated");
-  //   } catch (error) {
-  //     console.log("Error updating document: ", error);
-  //   }
-  // }
   async function handleChoiceAndVote(index) {
+    console.log("index :>> ", index);
     handleChoiceClick(index);
-    const pollRef = doc(db, "polls-2", id);
+    const pollRef = doc(db, "polls", id);
     try {
-      await updateDoc(pollRef, {
-        [`choices.${selectedChoice}`]: arrayUnion("vote"),
-      });
-      await updateDoc(pollRef, {
-        [`choices.${selectedChoice}`]: arrayRemove("vote"),
-      });
+      console.log("handleChoiceClick(index)", handleChoiceClick(index));
+      // await updateDoc(pollRef, {
+      //   [`choices.${index}.vote`]: arrayUnion(+1),
+      // });
+      // await updateDoc(pollRef, {
+      //   [`choices.${selectedChoice}`]: arrayRemove("vote"),
+      // });
 
       console.log("Document updated");
     } catch (error) {
@@ -162,9 +157,9 @@ function PollDetails() {
                   >
                     <div
                       className={`flex flex-row justify-between w-full cursor-pointer
-                       hover:bg-orange-300 bg-stone-100 py-1 px-5 border-solid 
+                       hover:bg-amber-400 bg-stone-100 py-1 px-5 border-solid 
                       border-2 rounded-lg border-stone-700 ${
-                        selectedChoice === index && "bg-orange-300"
+                        selectedChoice === index && "bg-amber-400"
                       }`}
                     >
                       <p>{choice.name}</p>
