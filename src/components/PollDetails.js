@@ -5,6 +5,13 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  FieldValue,
+  increment,
+  deleteDoc,
+  writeBatch,
+  query,
+  collection,
+  where,
 } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
@@ -68,54 +75,41 @@ function PollDetails() {
     "bg-gradient-to-r from-sky-600 to-neutral-300",
   ];
 
+  // const totalVotes = singlePoll?.choices.reduce(
+  //   (total, choice) => total + choice.vote,
+  //   0
+  // );
   const totalVotes = singlePoll?.choices.reduce(
     (total, choice) => total + choice.vote,
     0
   );
 
-  async function handleChoiceAndVote(index) {
-    console.log("index :>> ", index);
-    handleChoiceClick(index);
+  async function handleChoiceAndVote(choiceName) {
     const pollRef = doc(db, "polls", id);
-    const docRefToUpdate = doc(db, "polls", `choices`);
-    console.log("docRefToUpdate :>> ", docRefToUpdate);
-    const documentToUpdate = await getDoc(docRefToUpdate);
-    console.log("documentToUpdate", documentToUpdate);
 
-    const document = await getDoc(pollRef);
+    //NOTE we get the documents from the DB (we could use the ones fetched also, but we asure there is no conflits in the middle)
+    const pollDocuments = await getDoc(pollRef);
+    // console.log(pollDocuments.data());
+    //NOTE from the array of choices, we store the object of the one we want to vote for
+    const selectedPoll = pollDocuments.data().choices.find((choice) => {
+      return choice.name === choiceName;
+    });
+    // console.log("choices", selectedPoll);
+    //NOTE we use the "batch" method , to ensure that if something happens between removing the object from the array, and adding the new one with the vote,
+    //if something happens, e.g. connection breaks, will cancel all operations and the object will remain as it was before.
+    const batch = writeBatch(db);
+    batch.update(pollRef, { choices: arrayRemove(selectedPoll) });
+    batch.update(pollRef, {
+      choices: arrayUnion({ name: choiceName, vote: selectedPoll.vote + 1 }),
+    });
 
-    console.log("document :>> ", document.data().choices[index]);
-    const oldObject = document.data().choices[index];
-    const newDocObject = document.data().choices[index];
-    newDocObject.vote = newDocObject.vote + 1;
-    console.log("afer voting :>> ", newDocObject);
-
-    console.log("newDocObject", newDocObject);
-
-    const votesToUpdate = document.data().choices[index].vote;
-    console.log("votesToUpdate", votesToUpdate);
     try {
-      console.log("handleChoiceClick(index)", handleChoiceClick(index));
-      // await updateDoc(pollRef, {
-      //   choices: arrayRemove(oldObject),
-      // });
-      await updateDoc(pollRef, {
-        choices: arrayUnion(newDocObject),
-      });
-      // await updateDoc(pollRef, {
-      //   [`choices.${index}.vote`]: arrayUnion(+1),
-      // });
-      // await updateDoc(pollRef, {
-      //   [`choices.${selectedChoice}`]: arrayRemove("vote"),
-      // });
-
-      console.log("Document updated");
+      await batch.commit();
+      console.log("you voted!");
     } catch (error) {
-      console.log("Error updating document: ", error);
+      console.log("error voting", error);
     }
   }
-
-  // console.log("singlePoll.choices.name :>> ", singlePoll?.choices[1].name);
 
   useEffect(() => {
     async function getPollById() {
@@ -124,6 +118,7 @@ function PollDetails() {
       try {
         if (docSnap.exists()) {
           const data = docSnap.data();
+
           setSinglePoll(data);
         } else {
           console.log("No such document!");
@@ -175,9 +170,12 @@ function PollDetails() {
                 {singlePoll?.choices.map((choice, index) => (
                   <div
                     key={index}
-                    onClick={() => handleChoiceAndVote(index)}
+                    // onClick={() => handleChoiceAndVote(index)}
+                    //NOTE we send the name of choice we wanna vote for
+                    onClick={() => handleChoiceAndVote(choice.name)}
                     className="flex flex-row"
                   >
+                    {console.log("choice", choice.name)}
                     <div
                       className={`flex flex-row justify-between w-full cursor-pointer
                        hover:bg-amber-400 bg-stone-100 py-1 px-5 border-solid 
