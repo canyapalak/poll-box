@@ -1,5 +1,18 @@
 import { useParams } from "react-router-dom";
-import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  FieldValue,
+  increment,
+  deleteDoc,
+  writeBatch,
+  query,
+  collection,
+  where,
+} from "firebase/firestore";
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -51,8 +64,8 @@ function PollDetails() {
     return date.toLocaleString();
   }
 
-  function handleChoiceClick(index) {
-    setSelectedChoice(index);
+  function handleChoiceClick(choiceName) {
+    setSelectedChoice(choiceName);
   }
 
   const choiceBgColors = [
@@ -67,49 +80,33 @@ function PollDetails() {
     0
   );
 
-  async function handleChoiceAndVote(index) {
-    console.log("index :>> ", index);
-    handleChoiceClick(index);
+  async function handleChoiceAndVote(choiceName) {
+    setSelectedChoice(choiceName);
     const pollRef = doc(db, "polls", id);
-    const docRefToUpdate = doc(db, "polls", `choices`);
-    console.log("docRefToUpdate :>> ", docRefToUpdate);
-    const documentToUpdate = await getDoc(docRefToUpdate);
-    console.log("documentToUpdate", documentToUpdate);
 
-    const document = await getDoc(pollRef);
+    //NOTE we get the documents from the DB (we could use the ones fetched also, but we asure there is no conflits in the middle)
+    const pollDocuments = await getDoc(pollRef);
+    // console.log(pollDocuments.data());
+    //NOTE from the array of choices, we store the object of the one we want to vote for
+    const selectedPoll = pollDocuments.data().choices.find((choice) => {
+      return choice.name === choiceName;
+    });
+    // console.log("choices", selectedPoll);
+    //NOTE we use the "batch" method , to ensure that if something happens between removing the object from the array, and adding the new one with the vote,
+    //if something happens, e.g. connection breaks, will cancel all operations and the object will remain as it was before.
+    const batch = writeBatch(db);
+    batch.update(pollRef, { choices: arrayRemove(selectedPoll) });
+    batch.update(pollRef, {
+      choices: arrayUnion({ name: choiceName, vote: selectedPoll.vote + 1 }),
+    });
 
-    console.log("document :>> ", document.data().choices[index]);
-    const oldObject = document.data().choices[index];
-    const newDocObject = document.data().choices[index];
-    newDocObject.vote = newDocObject.vote + 1;
-    console.log("afer voting :>> ", newDocObject);
-
-    console.log("newDocObject", newDocObject);
-
-    const votesToUpdate = document.data().choices[index].vote;
-    console.log("votesToUpdate", votesToUpdate);
     try {
-      console.log("handleChoiceClick(index)", handleChoiceClick(index));
-      // await updateDoc(pollRef, {
-      //   choices: arrayRemove(oldObject),
-      // });
-      await updateDoc(pollRef, {
-        choices: arrayUnion(newDocObject),
-      });
-      // await updateDoc(pollRef, {
-      //   [`choices.${index}.vote`]: arrayUnion(+1),
-      // });
-      // await updateDoc(pollRef, {
-      //   [`choices.${selectedChoice}`]: arrayRemove("vote"),
-      // });
-
-      console.log("Document updated");
+      await batch.commit();
+      console.log("you voted!");
     } catch (error) {
-      console.log("Error updating document: ", error);
+      console.log("error voting", error);
     }
   }
-
-  // console.log("singlePoll.choices.name :>> ", singlePoll?.choices[1].name);
 
   useEffect(() => {
     async function getPollById() {
@@ -118,6 +115,7 @@ function PollDetails() {
       try {
         if (docSnap.exists()) {
           const data = docSnap.data();
+
           setSinglePoll(data);
         } else {
           console.log("No such document!");
@@ -164,24 +162,28 @@ function PollDetails() {
                 </p>
               </div>
             </div>
-            <div className=" dark:text-neutral-100 bg-amber-100 dark:bg-sky-900 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
+            <div
+              className=" dark:text-neutral-100 bg-amber-100 dark:bg-sky-900 p-3 flex flex-col 
+            gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
+            >
               <p className=" text-center mx-auto mt-1">{singlePoll?.title}</p>
               <div className="flex flex-col gap-y-3">
                 {singlePoll?.choices.map((choice, index) => (
                   <div
                     key={index}
-                    onClick={() => handleChoiceAndVote(index)}
+                    onClick={() => handleChoiceAndVote(choice.name)}
                     className="flex flex-row"
                   >
                     <div
                       className={`dark:text-black flex flex-row justify-between w-full cursor-pointer
-                       hover:bg-amber-400 bg-stone-100 dark:hover:bg-sky-200 py-1 px-5 border-solid 
-                      border-2 rounded-lg border-stone-700 ${
-                        selectedChoice === index && "bg-amber-400"
-                      }`}
+                       hover:bg-amber-300 bg-stone-100 dark:bg-stone-300 dark:hover:bg-sky-300 py-1 px-5
+                        border-solid border-2 rounded-lg border-stone-700 ${
+                          selectedChoice === choice.name &&
+                          "bg-amber-300 dark:bg-sky-300"
+                        }`}
                     >
                       <p>{choice.name}</p>
-                      {selectedChoice === index && (
+                      {selectedChoice === choice.name && (
                         <FaCheck className="inline-block text-lg my-auto" />
                       )}
                     </div>
@@ -209,10 +211,10 @@ function PollDetails() {
                             ? Math.round((choice.vote / totalVotes) * 100)
                             : 0;
                         return (
-                          <div key={i} className="flex flex-col">
+                          <div key={i} className="flex flex-col ">
                             <div className="flex flex-row justify-between ">
                               <p>{choice.name}</p>
-                              <div className="flex flex-row justify-evenly gap-4">
+                              <div className="flex flex-row justify-evenly gap-4 ">
                                 <p>{percentage}%</p>
                                 <p>
                                   ({choice.vote}{" "}
@@ -220,7 +222,7 @@ function PollDetails() {
                                 </p>
                               </div>
                             </div>
-                            <div className="h-5 w-full border-2 rounded-lg border-gray-500 bg-slate-50">
+                            <div className="h-5 w-full border-2 rounded-lg border-gray-500 bg-slate-50 dark:bg-stone-100">
                               <div
                                 key={i}
                                 className={`${
