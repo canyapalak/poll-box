@@ -9,7 +9,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <PollsContextProvider>
-      <App className="" />
+      <App className="bg-neutral-200" />
     </PollsContextProvider>
   </BrowserRouter>
 );

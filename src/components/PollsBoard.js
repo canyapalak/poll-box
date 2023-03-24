@@ -79,7 +79,7 @@ function PollsBoard({ allPolls }) {
         </Link>
       </div>
       <div
-        className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 
+        className="bg-gradient-to-b from-slate-200 to-slate-300 dark:from-slate-400 dark:to-slate-500 p-5 flex flex-col gap-3 
         border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
       >
         {filteredPolls?.length <= 0 ? (
@@ -89,13 +89,15 @@ function PollsBoard({ allPolls }) {
             <Link to={poll.id} key={poll.id}>
               <div
                 key={poll.id}
-                className="hover:bg-amber-400 bg-amber-100 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
+                className="hover:bg-amber-400 bg-amber-100 flex dark:bg-sky-900 dark:hover:bg-sky-700
+                flex-row gap-5 border-solid border-2 
+                border-ra rounded-lg border-stone-700"
               >
                 <div className="w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
                   {" "}
                   <CategoryIcon category={poll.category} className="" />
                 </div>
-                <div className="flex flex-row my-auto gap-5 justify-between w-full">
+                <div className="flex flex-row my-auto gap-5 justify-between w-full dark:text-neutral-100">
                   <h3>{poll.title}</h3>
                   <p className="mr-3">
                     {" "}

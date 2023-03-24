@@ -12,11 +12,14 @@ function NewPollForm() {
   const [selectedCategory, setSelectedCategory] = useState("Art/Culture");
   const [titleInput, setTitleInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [newPollId, setNewPollId] = useState("");
+  const [optionInputValue, setOptionInputValue] = useState("");
 
   const handleOptionChange = (event, index) => {
     const newOptions = [...options];
     newOptions[index] = event.target.value;
     setOptions(newOptions);
+    setOptionInputValue(event.target.value);
   };
 
   const handleAddOption = () => {
@@ -36,7 +39,7 @@ function NewPollForm() {
   function handleGetTitleInput(event) {
     setTitleInput(event.target.value);
   }
-  console.log("getTitleInput :>> ", titleInput);
+  console.log("titleInput :>> ", titleInput);
   console.log("selectedCategory", selectedCategory);
 
   async function handleSubmitPoll() {
@@ -55,37 +58,46 @@ function NewPollForm() {
 
       console.log("options", options);
       console.log("choices :>> ", choices);
-
-      const docRef = await addDoc(collection(db, "polls"), {
-        title,
-        category,
-        postTime,
-        choices,
-      });
-
-      console.log("Document written with ID: ", docRef.id);
+      setTimeout(async () => {
+        const docRef = await addDoc(collection(db, "polls"), {
+          title,
+          category,
+          postTime,
+          choices,
+        });
+        setNewPollId(docRef.id);
+        console.log("Document written with ID: ", docRef.id);
+      }, 2000);
     } catch (error) {
       console.log("Error updating document: ", error);
     }
   }
 
+  function handleSubmitPollAndModal() {
+    setIsOpen(true);
+    handleSubmitPoll();
+  }
+
   return (
     <div>
       <Link to={"/"}>
-        <BiChevronsLeft className="text-2xl mb-3" />
+        <BiChevronsLeft className="text-2xl mb-3 dark:text-white" />
       </Link>
       <div
-        className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 
+        className="bg-gradient-to-b from-slate-200 to-slate-300 dark:from-slate-400 dark:to-slate-500
+        p-5 flex flex-col gap-3 
         border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
       >
         <div
-          className="bg-amber-100 flex flex-col gap-5 border-solid border-2 rounded-lg 
-          border-stone-700 py-3 px-40"
+          className="bg-amber-100 dark:bg-sky-900 flex flex-col gap-5 border-solid border-2 rounded-lg 
+          border-stone-700 py-3 px-40 "
         >
           <div className="flex flex-col gap-3 px-20">
-            <p className="flex mx-auto mb-5">Create a new poll</p>
-            <div className="flex flex-row gap-4">
-              <p>Title:</p>{" "}
+            <p className="flex mx-auto mb-5 dark:text-neutral-100">
+              Create a new poll
+            </p>
+            <div className="flex flex-row gap-4 ">
+              <p className="dark:text-neutral-100">Title:</p>{" "}
               <input
                 id="title-input"
                 onChange={handleGetTitleInput}
@@ -93,7 +105,7 @@ function NewPollForm() {
               />
             </div>
             <div className="flex flex-row gap-4">
-              <p>Category:</p>{" "}
+              <p className="dark:text-neutral-100">Category:</p>{" "}
               <select
                 name="categories"
                 id="category-select"
@@ -113,7 +125,7 @@ function NewPollForm() {
               </select>
             </div>
             <div className="flex flex-col gap-3">
-              <p>Options:</p>
+              <p className="dark:text-neutral-100">Options:</p>
               {options.map((option, index) => (
                 <div className="flex flex-row gap-2" key={index}>
                   <input
@@ -124,7 +136,7 @@ function NewPollForm() {
                   {index !== 0 && (
                     <div className="text-xl">
                       <HiOutlineMinusCircle
-                        className="float-right relative inline-block cursor-pointer"
+                        className="float-right relative inline-block cursor-pointer dark:text-neutral-100"
                         onClick={() => handleDeleteOption(index)}
                       />
                     </div>
@@ -133,36 +145,22 @@ function NewPollForm() {
               ))}
               <div className="text-xl ml-25">
                 <HiOutlinePlusCircle
-                  className="cursor-pointer"
+                  className="cursor-pointer dark:text-neutral-100"
                   onClick={handleAddOption}
                 />
               </div>
             </div>
           </div>
-          <div
+          <button
             className="p-1 mt-3 bg-red-300 hover:bg-red-200 cursor-pointer 
-                      mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3"
-            onClick={handleSubmitPoll}
+                      mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3
+                      disabled:bg-stone-300 disabled:cursor-default"
+            onClick={handleSubmitPollAndModal}
+            disabled={!titleInput || !optionInputValue}
           >
             Submit Poll
-          </div>
-
-          {/* Modal  */}
-          <React.Fragment>
-            <div className="relative z-10">
-              <button
-                className="p-1 mt-3 bg-sky-300 hover:bg-sky-200 cursor-pointer 
-                          mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3 z-10"
-                onClick={() => setIsOpen(true)}
-              >
-                Open Modal
-              </button>
-              <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                Fancy Modal
-              </Modal>
-            </div>
-          </React.Fragment>
-          {/* Modal  */}
+          </button>
+          <Modal setIsOpen={setIsOpen} isOpen={isOpen} newPollId={newPollId} />
         </div>
       </div>
     </div>

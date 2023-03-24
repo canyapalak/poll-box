@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+
 import {
   doc,
   getDoc,
@@ -13,6 +14,7 @@ import {
   collection,
   where,
 } from "firebase/firestore";
+
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -143,18 +145,19 @@ function PollDetails() {
       ) : (
         <div>
           <Link to={"/"}>
-            <BiChevronsLeft className="text-2xl mb-3" />
+            <BiChevronsLeft className="text-2xl mb-3 dark:text-white" />
           </Link>
           <div
-            className="bg-gradient-to-b from-slate-200 to-slate-300 p-5 flex flex-col gap-3 
+            className="bg-gradient-to-b from-slate-200 to-slate-300 dark:from-slate-400 dark:to-slate-500
+            p-5 flex flex-col gap-3 
             border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
           >
-            <div className="bg-amber-100 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
-              <div className="w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
+            <div className="bg-amber-100 dark:bg-sky-900 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
+              <div className=" w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
                 {" "}
                 <CategoryIcon category={singlePoll?.category} />
               </div>
-              <div className="flex flex-row my-auto gap-2 justify-between w-full">
+              <div className="dark:text-neutral-100 flex flex-row my-auto gap-2 justify-between w-full">
                 <p>{singlePoll?.category}</p>
                 <p className="mr-3">
                   {formatPostTime(
@@ -164,8 +167,8 @@ function PollDetails() {
                 </p>
               </div>
             </div>
-            <div className=" bg-amber-100 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
-              <p className="text-center mx-auto mt-1">{singlePoll?.title}</p>
+            <div className=" dark:text-neutral-100 bg-amber-100 dark:bg-sky-900 p-3 flex flex-col gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
+              <p className=" text-center mx-auto mt-1">{singlePoll?.title}</p>
               <div className="flex flex-col gap-y-3">
                 {singlePoll?.choices.map((choice, index) => (
                   <div
@@ -177,8 +180,8 @@ function PollDetails() {
                   >
                     {console.log("choice", choice.name)}
                     <div
-                      className={`flex flex-row justify-between w-full cursor-pointer
-                       hover:bg-amber-400 bg-stone-100 py-1 px-5 border-solid 
+                      className={`dark:text-black flex flex-row justify-between w-full cursor-pointer
+                       hover:bg-amber-400 bg-stone-100 dark:hover:bg-sky-200 py-1 px-5 border-solid 
                       border-2 rounded-lg border-stone-700 ${
                         selectedChoice === index && "bg-amber-400"
                       }`}
@@ -192,7 +195,7 @@ function PollDetails() {
                 ))}
                 {!isMore && (
                   <div
-                    className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer mx-auto rounded-lg border-2
+                    className="dark:text-black p-1 bg-red-300 hover:bg-red-200 cursor-pointer mx-auto rounded-lg border-2
                      border-stone-700 shadow-md my-3"
                     onClick={handleShowMore}
                   >
@@ -240,7 +243,7 @@ function PollDetails() {
                     </p>
 
                     <div
-                      className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer 
+                      className="dark:text-black p-1 bg-red-300 hover:bg-red-200 cursor-pointer 
                       mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3"
                       onClick={handleShowMore}
                     >
