@@ -27,33 +27,35 @@ export default function Modal({ setIsOpen, isOpen, newPollId }) {
             <div className="relative w-auto my-6 mx-auto max-w-lg border-2 border-solid border-neutral-700 rounded-lg">
               <div
                 className="rounded-md shadow-lg relative flex flex-col w-full
-               bg-white outline-none focus:outline-none"
+               bg-white dark:bg-slate-700 outline-none focus:outline-none"
               >
                 <button
                   className="p-1 ml-auto bg-transparent border-0 text-black opacity-50 float-right
                   text-3xl leading-none font-semibold outline-none focus:outline-none"
                   onClick={() => setIsOpen(false)}
                 >
-                  <span className="text-black h-6 w-6 text-4xl block">×</span>
+                  <span className="text-black dark:text-white h-6 w-6 text-4xl block">
+                    ×
+                  </span>
                 </button>
                 <div>
                   <div className="relative p-6 flex-auto">
-                    <p className="my-2 text-center">
+                    <p className="my-2 text-center dark:text-neutral-100">
                       You have submitted your poll. Well done!
                     </p>
                   </div>
                   <div className="px-7 flex justify-center">
                     <div className="border-2 border-solid border-neutral-300 rounded-md flex flex-row">
-                      <p className="p-2">
+                      <p className="p-2 dark:text-neutral-100">
                         {window.location.origin}/{newPollId}
                       </p>
                       <div
                         className=" bg-orange-300 hover:bg-orange-200 shrink-0 flex flex-row 
-                        justify-center pt-2 px-2 rounded-r-sm"
+                        justify-center pt-1 px-1 rounded-r-sm"
                       >
                         {" "}
                         <AiOutlineCopy
-                          className=" text-2xl cursor-pointer"
+                          className=" text-3xl cursor-pointer"
                           onClick={handleCopyLink}
                         />
                       </div>
@@ -61,7 +63,9 @@ export default function Modal({ setIsOpen, isOpen, newPollId }) {
                   </div>
                   <div>
                     {isCopied && (
-                      <p className="text-center text-green-600 mr-5">Copied!</p>
+                      <p className="text-center text-green-600 dark:text-green-300 mr-5">
+                        Copied!
+                      </p>
                     )}
                   </div>
 
