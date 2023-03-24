@@ -12,6 +12,7 @@ function NewPollForm() {
   const [selectedCategory, setSelectedCategory] = useState("Art/Culture");
   const [titleInput, setTitleInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [newPollId, setNewPollId] = useState("");
 
   const handleOptionChange = (event, index) => {
     const newOptions = [...options];
@@ -55,18 +56,24 @@ function NewPollForm() {
 
       console.log("options", options);
       console.log("choices :>> ", choices);
-
-      const docRef = await addDoc(collection(db, "polls"), {
-        title,
-        category,
-        postTime,
-        choices,
-      });
-
-      console.log("Document written with ID: ", docRef.id);
+      setTimeout(async () => {
+        const docRef = await addDoc(collection(db, "polls"), {
+          title,
+          category,
+          postTime,
+          choices,
+        });
+        setNewPollId(docRef.id);
+        console.log("Document written with ID: ", docRef.id);
+      }, 2000);
     } catch (error) {
       console.log("Error updating document: ", error);
     }
+  }
+
+  function handleSubmitPollAndModal() {
+    setIsOpen(true);
+    handleSubmitPoll();
   }
 
   return (
@@ -142,27 +149,11 @@ function NewPollForm() {
           <div
             className="p-1 mt-3 bg-red-300 hover:bg-red-200 cursor-pointer 
                       mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3"
-            onClick={handleSubmitPoll}
+            onClick={handleSubmitPollAndModal}
           >
             Submit Poll
           </div>
-
-          {/* Modal  */}
-          <React.Fragment>
-            <div className="relative z-10">
-              <button
-                className="p-1 mt-3 bg-sky-300 hover:bg-sky-200 cursor-pointer 
-                          mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-3 z-10"
-                onClick={() => setIsOpen(true)}
-              >
-                Open Modal
-              </button>
-              <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                Fancy Modal
-              </Modal>
-            </div>
-          </React.Fragment>
-          {/* Modal  */}
+          <Modal setIsOpen={setIsOpen} isOpen={isOpen} newPollId={newPollId} />
         </div>
       </div>
     </div>

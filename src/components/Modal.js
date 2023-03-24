@@ -1,18 +1,87 @@
-export default function Modal({ open, children, onClose }) {
-  if (!open) return null;
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { AiOutlineCopy } from "react-icons/ai";
+
+export default function Modal({ setIsOpen, isOpen, newPollId }) {
+  const [isCopied, setIsCopied] = useState(false);
+  const newPollUrl = `${window.location.origin}/${newPollId}`;
+
+  const navigate = useNavigate();
+  const handleGoToPoll = () => {
+    navigate(`/${newPollId}`);
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(newPollUrl);
+    setIsCopied(true);
+  };
+
   return (
     <>
-      <div className="absolute t-0 l-0 r-0 b-0 bg-black/30 z-50" />
-      <div className="absolute top-[50%] left[50%] translate-[-50%, -50%] p-20 z-50 bg-white">
-        <button
-          className="p-1 mt-3 bg-orange-300 hover:bg-orange-200 cursor-pointer 
-                              mx-auto rounded-lg border-2 border-stone-700 shadow-md"
-          onClick={onClose}
-        >
-          Close Modal
-        </button>
-        {children}
-      </div>
+      {isOpen ? (
+        <>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 
+          z-50 outline-none focus:outline-none m-5"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-lg border-2 border-solid border-neutral-700 rounded-lg">
+              <div
+                className="rounded-md shadow-lg relative flex flex-col w-full
+               bg-white outline-none focus:outline-none"
+              >
+                <button
+                  className="p-1 ml-auto bg-transparent border-0 text-black opacity-50 float-right
+                  text-3xl leading-none font-semibold outline-none focus:outline-none"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className="text-black h-6 w-6 text-4xl block">×</span>
+                </button>
+                <div>
+                  <div className="relative p-6 flex-auto">
+                    <p className="my-2 text-center">
+                      You have submitted your poll. Well done!
+                    </p>
+                  </div>
+                  <div className="px-7 flex justify-center">
+                    <div className="border-2 border-solid border-neutral-300 rounded-md flex flex-row">
+                      <p className="p-2">
+                        {window.location.origin}/{newPollId}
+                      </p>
+                      <div
+                        className=" bg-orange-300 hover:bg-orange-200 shrink-0 flex flex-row 
+                        justify-center pt-2 px-2 rounded-r-sm"
+                      >
+                        {" "}
+                        <AiOutlineCopy
+                          className=" text-2xl cursor-pointer"
+                          onClick={handleCopyLink}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div>
+                    {isCopied && (
+                      <p className="text-center text-green-600 mr-5">Copied!</p>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-end">
+                    <button
+                      className="p-1 bg-red-300 hover:bg-red-200 cursor-pointer 
+                            mx-auto rounded-lg border-2 border-stone-700 shadow-md mb-5 mt-5 z-10"
+                      type="button"
+                      onClick={handleGoToPoll}
+                    >
+                      Go to Poll
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black/50"></div>
+        </>
+      ) : null}
     </>
   );
 }
