@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+
 import {
   doc,
   getDoc,
@@ -13,6 +14,7 @@ import {
   collection,
   where,
 } from "firebase/firestore";
+
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -75,13 +77,16 @@ function PollDetails() {
     "bg-gradient-to-r from-sky-600 to-neutral-300",
   ];
 
+  // const totalVotes = singlePoll?.choices.reduce(
+  //   (total, choice) => total + choice.vote,
+  //   0
+  // );
   const totalVotes = singlePoll?.choices.reduce(
     (total, choice) => total + choice.vote,
     0
   );
 
   async function handleChoiceAndVote(choiceName) {
-    setSelectedChoice(choiceName);
     const pollRef = doc(db, "polls", id);
 
     //NOTE we get the documents from the DB (we could use the ones fetched also, but we asure there is no conflits in the middle)
@@ -171,9 +176,12 @@ function PollDetails() {
                 {singlePoll?.choices.map((choice, index) => (
                   <div
                     key={index}
+                    // onClick={() => handleChoiceAndVote(index)}
+                    //NOTE we send the name of choice we wanna vote for
                     onClick={() => handleChoiceAndVote(choice.name)}
                     className="flex flex-row"
                   >
+                    {console.log("choice", choice.name)}
                     <div
                       className={`dark:text-black flex flex-row justify-between w-full cursor-pointer
                        hover:bg-amber-300 bg-stone-100 dark:bg-stone-300 dark:hover:bg-sky-300 py-1 px-5
