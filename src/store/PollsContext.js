@@ -1,5 +1,11 @@
 import React, { createContext, useState, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../config/FirebaseConfig.js";
 
 export const PollsContext = createContext();
@@ -11,7 +17,9 @@ export const PollsContextProvider = (props) => {
   useEffect(() => {
     async function getPolls() {
       try {
-        const querySnapshot = await getDocs(collection(db, "polls"));
+        const querySnapshot = await getDocs(
+          query(collection(db, "polls"), orderBy("postTime", "desc"))
+        );
         const polls = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           title: doc.data().title,
@@ -23,14 +31,34 @@ export const PollsContextProvider = (props) => {
           ).toLocaleString(),
         }));
         setAllPolls(polls);
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1000);
+        setIsLoading(false);
       } catch (error) {
         console.error(error);
       }
     }
     getPolls();
+
+    const unsubscribe = onSnapshot(
+      collection(db, "polls"),
+      (snapshot) => {
+        const polls = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          title: doc.data().title,
+          choices: doc.data().choices,
+          category: doc.data().category,
+          postTime: new Date(
+            doc.data().postTime.seconds * 1000 +
+              doc.data().postTime.nanoseconds / 1000000
+          ).toLocaleString(),
+        }));
+        setAllPolls(polls);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+
+    return () => unsubscribe();
   }, []);
 
   console.log("allPolls", allPolls);

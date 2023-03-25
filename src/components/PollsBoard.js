@@ -49,13 +49,13 @@ function PollsBoard({ allPolls }) {
 
   return (
     <div>
-      <div className="flex flex-row justify-between mb-3">
+      <div className="flex flex-row justify-between mb-1">
         <select
           name="categories"
           id="categories"
           value={selectedCategory}
           onChange={handleCategoryChange}
-          className="h-[35px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md "
+          className="h-[35px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md dark:bg-stone-300"
         >
           <option value="All">All</option>
           <option value="Art/Culture">Art/Culture</option>

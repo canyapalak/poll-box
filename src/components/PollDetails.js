@@ -1,20 +1,11 @@
 import { useParams } from "react-router-dom";
-
 import {
   doc,
   getDoc,
-  updateDoc,
   arrayUnion,
   arrayRemove,
-  FieldValue,
-  increment,
-  deleteDoc,
   writeBatch,
-  query,
-  collection,
-  where,
 } from "firebase/firestore";
-
 import { db } from "../config/FirebaseConfig.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -30,6 +21,7 @@ import LogoOt from "../assets/icon-other.png";
 import Spinner from "../assets/spinner.gif";
 import { FaCheck } from "react-icons/fa";
 import { BiChevronDown, BiChevronUp, BiChevronsLeft } from "react-icons/bi";
+import ModalOneVote from "./ModalOneVote.js";
 
 function PollDetails() {
   const { id } = useParams();
@@ -37,6 +29,8 @@ function PollDetails() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedChoice, setSelectedChoice] = useState(null);
   const [isMore, setIsMore] = useState(false);
+  const [originalChoices, setOriginalChoices] = useState([]);
+  const [isModalOneVoteOpen, setIsModalOneVoteOpen] = useState(false);
 
   const categories = [
     { category: "Politics", icon: LogoPo },
@@ -66,51 +60,52 @@ function PollDetails() {
     return date.toLocaleString();
   }
 
-  function handleChoiceClick(choiceName) {
-    setSelectedChoice(choiceName);
-  }
-
   const choiceBgColors = [
-    "bg-gradient-to-r from-rose-600 to-neutral-300",
-    "bg-gradient-to-r from-lime-600 to-neutral-300",
-    "bg-gradient-to-r from-amber-600 to-neutral-300",
-    "bg-gradient-to-r from-sky-600 to-neutral-300",
+    "bg-gradient-to-r from-rose-400 to-rose-300",
+    "bg-gradient-to-r from-sky-400 to-sky-300",
+    "bg-gradient-to-r from-amber-400 to-amber-300",
+    "bg-gradient-to-r from-green-400 to-green-300",
   ];
 
-  // const totalVotes = singlePoll?.choices.reduce(
-  //   (total, choice) => total + choice.vote,
-  //   0
-  // );
   const totalVotes = singlePoll?.choices.reduce(
     (total, choice) => total + choice.vote,
     0
   );
 
   async function handleChoiceAndVote(choiceName) {
+    const hasVoted = localStorage.getItem(`poll_${id}`);
+    if (hasVoted) {
+      setIsModalOneVoteOpen(true);
+      console.log("You have already voted for this poll!");
+      return;
+    }
+    const selectedChoiceIndex = originalChoices.findIndex(
+      (choice) => choice.name === choiceName
+    );
+    setSelectedChoice(choiceName);
+    const updatedChoices = [...singlePoll.choices];
+    updatedChoices[selectedChoiceIndex].vote += 1;
+    setSinglePoll({ ...singlePoll, choices: updatedChoices });
     const pollRef = doc(db, "polls", id);
-
-    //NOTE we get the documents from the DB (we could use the ones fetched also, but we asure there is no conflits in the middle)
     const pollDocuments = await getDoc(pollRef);
-    // console.log(pollDocuments.data());
-    //NOTE from the array of choices, we store the object of the one we want to vote for
-    const selectedPoll = pollDocuments.data().choices.find((choice) => {
-      return choice.name === choiceName;
-    });
-    // console.log("choices", selectedPoll);
-    //NOTE we use the "batch" method , to ensure that if something happens between removing the object from the array, and adding the new one with the vote,
-    //if something happens, e.g. connection breaks, will cancel all operations and the object will remain as it was before.
+    const selectedPoll = pollDocuments
+      .data()
+      .choices.find((choice) => choice.name === choiceName);
     const batch = writeBatch(db);
     batch.update(pollRef, { choices: arrayRemove(selectedPoll) });
     batch.update(pollRef, {
-      choices: arrayUnion({ name: choiceName, vote: selectedPoll.vote + 1 }),
+      choices: arrayUnion({
+        name: choiceName,
+        vote: selectedPoll.vote + 1,
+      }),
     });
-
     try {
       await batch.commit();
       console.log("you voted!");
     } catch (error) {
       console.log("error voting", error);
     }
+    localStorage.setItem(`poll_${id}`, true);
   }
 
   useEffect(() => {
@@ -122,6 +117,7 @@ function PollDetails() {
           const data = docSnap.data();
 
           setSinglePoll(data);
+          setOriginalChoices([...data.choices]);
         } else {
           console.log("No such document!");
         }
@@ -139,7 +135,7 @@ function PollDetails() {
   console.log("selectedChoice", selectedChoice);
 
   return (
-    <div className="mb-5">
+    <div>
       {isLoading ? (
         <img src={Spinner} alt="Spinner" className="w-7 mx-auto mt-40" />
       ) : (
@@ -157,7 +153,7 @@ function PollDetails() {
                 {" "}
                 <CategoryIcon category={singlePoll?.category} />
               </div>
-              <div className="dark:text-neutral-100 flex flex-row my-auto gap-2 justify-between w-full">
+              <div className="dark:text-neutral-100 flex flex-col md:flex-row my-auto gap-2 justify-between w-full">
                 <p>{singlePoll?.category}</p>
                 <p className="mr-3">
                   {formatPostTime(
@@ -173,11 +169,9 @@ function PollDetails() {
             >
               <p className=" text-center mx-auto mt-1">{singlePoll?.title}</p>
               <div className="flex flex-col gap-y-3">
-                {singlePoll?.choices.map((choice, index) => (
+                {originalChoices.map((choice, index) => (
                   <div
                     key={index}
-                    // onClick={() => handleChoiceAndVote(index)}
-                    //NOTE we send the name of choice we wanna vote for
                     onClick={() => handleChoiceAndVote(choice.name)}
                     className="flex flex-row"
                   >
@@ -210,7 +204,7 @@ function PollDetails() {
 
                 {isMore && (
                   <div className="flex flex-col gap-2 mt-5">
-                    {singlePoll?.choices
+                    {originalChoices
                       .slice()
                       .sort((a, b) => b.vote - a.vote)
                       .map((choice, i) => {
@@ -256,6 +250,10 @@ function PollDetails() {
                     </div>
                   </div>
                 )}
+                <ModalOneVote
+                  isModalOneVoteOpen={isModalOneVoteOpen}
+                  setIsModalOneVoteOpen={setIsModalOneVoteOpen}
+                />
               </div>
             </div>
           </div>

@@ -3,15 +3,15 @@ import { Link } from "react-router-dom";
 import { BiChevronsLeft } from "react-icons/bi";
 import { HiOutlinePlusCircle, HiOutlineMinusCircle } from "react-icons/hi";
 import React, { useState } from "react";
-import { addDoc, collection, doc, setDoc, Timestamp } from "firebase/firestore";
+import { addDoc, collection, Timestamp } from "firebase/firestore";
 import { db } from "../config/FirebaseConfig";
-import Modal from "./Modal";
+import ModalNewPoll from "./ModalNewPoll";
 
 function NewPollForm() {
   const [options, setOptions] = useState(["", ""]);
   const [selectedCategory, setSelectedCategory] = useState("Art/Culture");
   const [titleInput, setTitleInput] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalNewPollOpen, setIsModalNewPollOpen] = useState(false);
   const [newPollId, setNewPollId] = useState("");
   const [optionInputValue, setOptionInputValue] = useState("");
 
@@ -74,7 +74,7 @@ function NewPollForm() {
   }
 
   function handleSubmitPollAndModal() {
-    setIsOpen(true);
+    setIsModalNewPollOpen(true);
     handleSubmitPoll();
   }
 
@@ -90,28 +90,28 @@ function NewPollForm() {
       >
         <div
           className="bg-amber-100 dark:bg-sky-900 flex flex-col gap-5 border-solid border-2 rounded-lg 
-          border-stone-700 py-3 px-40 "
+          border-stone-700 py-3 px-3 md:px-20 lg:px-30 "
         >
-          <div className="flex flex-col gap-3 px-20">
+          <div className="flex flex-col gap-3 px-3 md:px-10 lg:px-15 xl:25">
             <p className="flex mx-auto mb-5 dark:text-neutral-100">
               Create a new poll
             </p>
-            <div className="flex flex-row gap-4 ">
+            <div className="flex flex-col sm:flex-row gap-4 ">
               <p className="dark:text-neutral-100">Title:</p>{" "}
               <input
                 id="title-input"
                 onChange={handleGetTitleInput}
-                className="ml-7 border-2 border-stone-700 rounded-md px-2 w-full shadow-md"
+                className="ml-7 border-2 border-stone-700 rounded-md px-2 md:w-full shadow-md  dark:bg-stone-300"
               />
             </div>
-            <div className="flex flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4">
               <p className="dark:text-neutral-100">Category:</p>{" "}
               <select
                 name="categories"
                 id="category-select"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                className="h-[30px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md"
+                className="h-[30px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md dark:bg-stone-300"
               >
                 <option value="Art/Culture">Art/Culture</option>
                 <option value="Business/Finance">Business/Finance</option>
@@ -129,7 +129,7 @@ function NewPollForm() {
               {options.map((option, index) => (
                 <div className="flex flex-row gap-2" key={index}>
                   <input
-                    className="ml-25 border-2 border-stone-700 rounded-md px-2 w-full shadow-md option-input"
+                    className="md:ml-25 border-2 border-stone-700 rounded-md px-2 w-full shadow-md option-input dark:bg-stone-300"
                     value={option}
                     onChange={(event) => handleOptionChange(event, index)}
                   />
@@ -160,7 +160,11 @@ function NewPollForm() {
           >
             Submit Poll
           </button>
-          <Modal setIsOpen={setIsOpen} isOpen={isOpen} newPollId={newPollId} />
+          <ModalNewPoll
+            setIsModalNewPollOpen={setIsModalNewPollOpen}
+            isModalNewPollOpen={isModalNewPollOpen}
+            newPollId={newPollId}
+          />
         </div>
       </div>
     </div>

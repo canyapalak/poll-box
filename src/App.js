@@ -7,6 +7,7 @@ import PollPage from "./views/PollPage";
 import CreatePoll from "./views/CreatePoll";
 import AppContainer from "./components/AppContainer";
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 
 function App() {
   const { allPolls } = useContext(PollsContext);
@@ -23,6 +24,7 @@ function App() {
         <Route path="/:id" element={<PollPage />} />
         <Route path="/newpoll" element={<CreatePoll />} />
       </Routes>
+      <Footer />
     </AppContainer>
   );
 }

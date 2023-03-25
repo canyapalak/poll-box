@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineCopy } from "react-icons/ai";
 
-export default function Modal({ setIsOpen, isOpen, newPollId }) {
+export default function ModalNewPoll({
+  setIsModalNewPollOpen,
+  isModalNewPollOpen,
+  newPollId,
+}) {
   const [isCopied, setIsCopied] = useState(false);
   const newPollUrl = `${window.location.origin}/${newPollId}`;
 
@@ -18,7 +22,7 @@ export default function Modal({ setIsOpen, isOpen, newPollId }) {
 
   return (
     <>
-      {isOpen ? (
+      {isModalNewPollOpen ? (
         <>
           <div
             className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 
@@ -32,7 +36,7 @@ export default function Modal({ setIsOpen, isOpen, newPollId }) {
                 <button
                   className="p-1 ml-auto bg-transparent border-0 text-black opacity-50 float-right
                   text-3xl leading-none font-semibold outline-none focus:outline-none"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => setIsModalNewPollOpen(false)}
                 >
                   <span className="text-black dark:text-white h-6 w-6 text-4xl block">
                     ×

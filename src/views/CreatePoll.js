@@ -1,7 +1,7 @@
 import Spinner from "../assets/spinner.gif";
 import NewPollForm from "../components/NewPollForm";
 
-function HomePage({ allPolls, isLoading }) {
+function HomePage({ isLoading }) {
   return (
     <div className="min-h-screen mx-8 2xl:mx-80 xl:mx-60 lg:mx-40 md:mx-30 sm:mx-20 flex-row justify-center">
       {isLoading ? (
