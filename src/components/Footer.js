@@ -11,7 +11,7 @@ function Footer() {
         className="flex flex-row 
         py-2 border-2 border-x-stone-700 border-t-stone-700 dark:border-t-stone-700 dark:border-b-slate-400
           rounded-t-lg shadow-lg bg-gradient-to-b from-slate-200 to-slate-300
-           dark:from-slate-500 dark:to-slate-400 px-20 w-full text-sm"
+           dark:from-slate-500 dark:to-slate-400 px-7 md:px-10 lg:px-20 w-full text-sm"
       >
         <div className="flex flex-row justify-center items-center mx-auto">
           <img
