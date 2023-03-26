@@ -76,7 +76,7 @@ function PollDetails() {
     const hasVoted = localStorage.getItem(`poll_${id}`);
     if (hasVoted) {
       setIsModalOneVoteOpen(true);
-      console.log("You have already voted for this poll!");
+      // console.log("You have already voted for this poll!");
       return;
     }
     const selectedChoiceIndex = originalChoices.findIndex(
@@ -101,9 +101,9 @@ function PollDetails() {
     });
     try {
       await batch.commit();
-      console.log("you voted!");
+      // console.log("you voted!");
     } catch (error) {
-      console.log("error voting", error);
+      // console.log("error voting", error);
     }
     localStorage.setItem(`poll_${id}`, true);
   }
@@ -119,7 +119,7 @@ function PollDetails() {
           setSinglePoll(data);
           setOriginalChoices([...data.choices]);
         } else {
-          console.log("No such document!");
+          // console.log("No such document!");
         }
         setTimeout(() => {
           setIsLoading(false);
@@ -131,8 +131,8 @@ function PollDetails() {
     getPollById();
   }, [id]);
 
-  console.log("singlePoll", singlePoll);
-  console.log("selectedChoice", selectedChoice);
+  // console.log("singlePoll", singlePoll);
+  // console.log("selectedChoice", selectedChoice);
 
   return (
     <div>
@@ -149,9 +149,13 @@ function PollDetails() {
             border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
           >
             <div className="bg-amber-100 dark:bg-sky-900 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
-              <div className=" w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
-                {" "}
-                <CategoryIcon category={singlePoll?.category} />
+              <div
+                className="items-center p-2 py-auto text-center w-[3rem] md:h-[3rem]
+  bg-rose-300 rounded-l-md border-r-2 border-stone-800 flex"
+              >
+                <span className="flex items-center h-full">
+                  <CategoryIcon category={singlePoll?.category} />
+                </span>
               </div>
               <div className="dark:text-neutral-100 flex flex-col md:flex-row my-auto gap-2 justify-between w-full">
                 <p>{singlePoll?.category}</p>
@@ -175,7 +179,7 @@ function PollDetails() {
                     onClick={() => handleChoiceAndVote(choice.name)}
                     className="flex flex-row"
                   >
-                    {console.log("choice", choice.name)}
+                    {/* {console.log("choice", choice.name)} */}
                     <div
                       className={`dark:text-black flex flex-row justify-between w-full cursor-pointer
                        hover:bg-amber-300 bg-stone-100 dark:bg-stone-300 dark:hover:bg-sky-300 py-1 px-5

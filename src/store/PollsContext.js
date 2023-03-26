@@ -33,7 +33,7 @@ export const PollsContextProvider = (props) => {
         setAllPolls(polls);
         setIsLoading(false);
       } catch (error) {
-        console.error(error);
+        // console.error(error);
       }
     }
     getPolls();
@@ -54,15 +54,15 @@ export const PollsContextProvider = (props) => {
         setAllPolls(polls);
       },
       (error) => {
-        console.error(error);
+        // console.error(error);
       }
     );
 
     return () => unsubscribe();
   }, []);
 
-  console.log("allPolls", allPolls);
-  console.log("isLoading", isLoading);
+  // console.log("allPolls", allPolls);
+  // console.log("isLoading", isLoading);
 
   return allPolls.length > 0 ? (
     <PollsContext.Provider value={{ allPolls, isLoading }}>

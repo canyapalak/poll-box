@@ -17,18 +17,20 @@ function Footer() {
           <img
             src={FooterLogo}
             alt="Logo"
-            className="w-[2.5rem] h-[2-5rem] float-left md:ml-10 mr-2"
+            className="w-[2.5rem] h-[2-5rem] md:ml-10 mr-2"
           />
 
-          <p className="mx-auto mr-2">poll box ® 2023 by</p>
-          <a
-            href="https://github.com/canyapalak"
-            target="_blank"
-            rel="noreferrer"
-            className="cursor-pointer dark:text-amber-300 dark:hover:text-amber-200 text-red-400 hover:text-red-300"
-          >
-            Can Yapalak
-          </a>
+          <p className="mr-2">
+            poll box ® 2023 by{" "}
+            <a
+              href="https://github.com/canyapalak"
+              target="_blank"
+              rel="noreferrer"
+              className="cursor-pointer dark:text-amber-300 dark:hover:text-amber-200 text-red-400 hover:text-red-300"
+            >
+              Can Yapalak
+            </a>
+          </p>
         </div>
       </div>
     </div>

@@ -39,8 +39,8 @@ function NewPollForm() {
   function handleGetTitleInput(event) {
     setTitleInput(event.target.value);
   }
-  console.log("titleInput :>> ", titleInput);
-  console.log("selectedCategory", selectedCategory);
+  // console.log("titleInput :>> ", titleInput);
+  // console.log("selectedCategory", selectedCategory);
 
   async function handleSubmitPoll() {
     try {
@@ -56,8 +56,8 @@ function NewPollForm() {
         choices.push({ name, vote });
       }
 
-      console.log("options", options);
-      console.log("choices :>> ", choices);
+      // console.log("options", options);
+      // console.log("choices :>> ", choices);
       setTimeout(async () => {
         const docRef = await addDoc(collection(db, "polls"), {
           title,
@@ -66,10 +66,10 @@ function NewPollForm() {
           choices,
         });
         setNewPollId(docRef.id);
-        console.log("Document written with ID: ", docRef.id);
+        // console.log("Document written with ID: ", docRef.id);
       }, 2000);
     } catch (error) {
-      console.log("Error updating document: ", error);
+      // console.log("Error updating document: ", error);
     }
   }
 
@@ -101,7 +101,7 @@ function NewPollForm() {
               <input
                 id="title-input"
                 onChange={handleGetTitleInput}
-                className="ml-7 border-2 border-stone-700 rounded-md px-2 md:w-full shadow-md  dark:bg-stone-300"
+                className="md:ml-7 border-2 border-stone-700 rounded-md px-2 md:w-full shadow-md  dark:bg-stone-300"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-4">

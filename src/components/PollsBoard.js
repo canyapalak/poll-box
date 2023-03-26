@@ -93,9 +93,13 @@ function PollsBoard({ allPolls }) {
                 flex-row gap-5 border-solid border-2 
                 border-ra rounded-lg border-stone-700"
               >
-                <div className="w-[3rem] h-[3rem] p-2 bg-rose-300 rounded-l-lg border-r-2 border-stone-800 shrink-0">
-                  {" "}
-                  <CategoryIcon category={poll.category} className="" />
+                <div
+                  className="items-center p-2 py-auto text-center w-[3rem] md:h-[3rem]
+  bg-rose-300 rounded-l-md border-r-2 border-stone-800 flex"
+                >
+                  <span className="flex items-center h-full">
+                    <CategoryIcon category={poll.category} />
+                  </span>
                 </div>
                 <div className="flex flex-row my-auto gap-5 justify-between w-full dark:text-neutral-100">
                   <h3>{poll.title}</h3>
