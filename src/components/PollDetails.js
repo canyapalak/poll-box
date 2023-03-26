@@ -148,7 +148,7 @@ function PollDetails() {
             p-5 flex flex-col gap-3 
             border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
           >
-            <div className="bg-amber-100 dark:bg-sky-900 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
+            <div className="bg-amber-100 dark:bg-slate-600 flex flex-row gap-5 border-solid border-2 border-ra rounded-lg border-stone-700">
               <div
                 className="items-center p-2 py-auto text-center w-[3rem] md:h-[3rem]
   bg-rose-300 rounded-l-md border-r-2 border-stone-800 flex"
@@ -168,7 +168,7 @@ function PollDetails() {
               </div>
             </div>
             <div
-              className=" dark:text-neutral-100 bg-amber-100 dark:bg-sky-900 p-3 flex flex-col 
+              className=" dark:text-neutral-100 bg-amber-100 dark:bg-slate-600 p-3 flex flex-col 
             gap-5 border-solid border-2 border-ra rounded-lg border-stone-700"
             >
               <p className=" text-center mx-auto mt-1">{singlePoll?.title}</p>
@@ -182,10 +182,10 @@ function PollDetails() {
                     {/* {console.log("choice", choice.name)} */}
                     <div
                       className={`dark:text-black flex flex-row justify-between w-full cursor-pointer
-                       hover:bg-amber-300 bg-stone-100 dark:bg-stone-300 dark:hover:bg-sky-300 py-1 px-5
+                       hover:bg-amber-300 bg-stone-100 dark:bg-stone-200 dark:hover:bg-slate-200 py-1 px-5
                         border-solid border-2 rounded-lg border-stone-700 ${
                           selectedChoice === choice.name &&
-                          "bg-amber-300 dark:bg-sky-300"
+                          "bg-amber-300 dark:bg-slate-200"
                         }`}
                     >
                       <p>{choice.name}</p>
@@ -228,7 +228,7 @@ function PollDetails() {
                                 </p>
                               </div>
                             </div>
-                            <div className="h-5 w-full border-2 rounded-lg border-gray-500 bg-slate-50 dark:bg-stone-100">
+                            <div className="h-5 w-full border-2 rounded-lg border-gray-500 bg-slate-50 dark:bg-stone-200">
                               <div
                                 key={i}
                                 className={`${

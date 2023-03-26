@@ -89,7 +89,7 @@ function PollsBoard({ allPolls }) {
             <Link to={poll.id} key={poll.id}>
               <div
                 key={poll.id}
-                className="hover:bg-amber-300 bg-amber-100 flex dark:bg-sky-900 dark:hover:bg-sky-700
+                className="hover:bg-amber-300 bg-amber-100 flex dark:bg-slate-600 dark:hover:bg-slate-500
                 flex-row gap-5 border-solid border-2 
                 border-ra rounded-lg border-stone-700"
               >

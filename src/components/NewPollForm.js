@@ -89,7 +89,7 @@ function NewPollForm() {
         border-solid border-2 border-ra rounded-lg border-stone-700 shadow-lg"
       >
         <div
-          className="bg-amber-100 dark:bg-sky-900 flex flex-col gap-5 border-solid border-2 rounded-lg 
+          className="bg-amber-100 dark:bg-slate-600 flex flex-col gap-5 border-solid border-2 rounded-lg 
           border-stone-700 py-3 px-3 md:px-20 lg:px-30 "
         >
           <div className="flex flex-col gap-3 px-3 md:px-10 lg:px-15 xl:25">
@@ -101,7 +101,7 @@ function NewPollForm() {
               <input
                 id="title-input"
                 onChange={handleGetTitleInput}
-                className="md:ml-7 border-2 border-stone-700 rounded-md px-2 md:w-full shadow-md  dark:bg-stone-300"
+                className="md:ml-7 border-2 border-stone-700 rounded-md px-2 md:w-full shadow-md  dark:bg-stone-200"
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -111,7 +111,7 @@ function NewPollForm() {
                 id="category-select"
                 value={selectedCategory}
                 onChange={handleCategoryChange}
-                className="h-[30px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md dark:bg-stone-300"
+                className="h-[30px] w-[190px] rounded-md border-2 border-stone-700 pl-1 shadow-md dark:bg-stone-200"
               >
                 <option value="Art/Culture">Art/Culture</option>
                 <option value="Business/Finance">Business/Finance</option>
@@ -129,7 +129,7 @@ function NewPollForm() {
               {options.map((option, index) => (
                 <div className="flex flex-row gap-2" key={index}>
                   <input
-                    className="md:ml-25 border-2 border-stone-700 rounded-md px-2 w-full shadow-md option-input dark:bg-stone-300"
+                    className="md:ml-25 border-2 border-stone-700 rounded-md px-2 w-full shadow-md option-input dark:bg-stone-200"
                     value={option}
                     onChange={(event) => handleOptionChange(event, index)}
                   />
