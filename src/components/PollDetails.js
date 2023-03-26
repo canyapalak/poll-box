@@ -233,7 +233,7 @@ function PollDetails() {
                                 key={i}
                                 className={`${
                                   choiceBgColors[i % choiceBgColors.length]
-                                } h-full rounded-md border-solid border-2 border-slate-50`}
+                                } h-full rounded-md border-solid border-2 border-slate-50 dark:border-stone-200`}
                                 style={{ width: `${percentage}%` }}
                               ></div>
                             </div>
