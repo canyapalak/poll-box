@@ -95,7 +95,7 @@ function PollsBoard({ allPolls }) {
               >
                 <div
                   className="items-center p-2 py-auto text-center w-[3rem] md:h-[3rem]
-  bg-rose-300 rounded-l-md border-r-2 border-stone-800 flex"
+  bg-rose-300 rounded-l-md border-r-2 border-stone-700 flex"
                 >
                   <span className="flex items-center h-full">
                     <CategoryIcon category={poll.category} />
