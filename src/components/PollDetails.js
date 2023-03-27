@@ -182,7 +182,7 @@ function PollDetails() {
                     {/* {console.log("choice", choice.name)} */}
                     <div
                       className={`dark:text-black flex flex-row justify-between w-full cursor-pointer
-                       hover:bg-amber-300 bg-stone-100 dark:bg-stone-200 dark:hover:bg-slate-200 py-1 px-5
+                       hover:bg-amber-300 bg-stone-100 dark:bg-stone-200 dark:hover:bg-slate-300 py-1 px-5
                         border-solid border-2 rounded-lg border-stone-700 ${
                           selectedChoice === choice.name &&
                           "bg-amber-300 dark:bg-slate-200"
